@@ -42,10 +42,6 @@ public class PrimaryConfig {
     @Autowired
     @Qualifier("primaryDataSource")
     private DataSource primaryDataSource;
-    @Autowired
-    private HibernateProperties hibernateProperties;
-    @Autowired
-    private JpaProperties jpaProperties;
 
     @Primary
     @Bean(name = "entityManagerPrimary")
@@ -61,7 +57,6 @@ public class PrimaryConfig {
        properties.put("hibernate.dialect", pgDialect);
        properties.put("hibernate.show_sql", showSql);
         return builder.dataSource(primaryDataSource)
-                .properties(getHibernateProperties())
                 .packages("com.lwh.pojo.entity.primary")
                 .properties(properties)
                 .persistenceUnit("primaryPersistenceUnit")
@@ -72,9 +67,5 @@ public class PrimaryConfig {
     @Bean(name = "transactionManagerPrimary")
     public PlatformTransactionManager transactionManager(EntityManagerFactoryBuilder builder) {
         return new JpaTransactionManager(entityManagerFactoryPrimary(builder).getObject());
-    }
-
-    private Map<String, Object> getHibernateProperties() {
-        return hibernateProperties.determineHibernateProperties(jpaProperties.getProperties(), new HibernateSettings());
     }
 }

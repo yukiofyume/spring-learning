@@ -1,8 +1,11 @@
 package com.lwh.pojo.entity.second;
 
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @Author: lwh
@@ -18,4 +21,8 @@ public class ProductEntity {
     private Long id;
     private String productName;
     private Double price;
+    @CreatedDate
+    private Date createTime;
+    @LastModifiedDate
+    private Date updateTime;
 }

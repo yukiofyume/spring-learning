@@ -4,8 +4,11 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @Author: lwh
@@ -24,4 +27,8 @@ public class UserEntity {
     @Column(unique = true, nullable = false)
     private String email;
     private Integer status;
+    @CreatedDate
+    private Date createTime;
+    @LastModifiedDate
+    private Date updateTime;
 }

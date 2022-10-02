@@ -3,9 +3,6 @@ package com.lwh.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings;
-import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,11 +12,9 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @Author: lwh
@@ -44,25 +39,18 @@ public class SecondConfig {
     @Qualifier("secondDataSource")
     private DataSource secondDataSource;
 
-    @Resource
-    private JpaProperties jpaProperties;
-
-    @Resource
-    private HibernateProperties hibernateProperties;
-
     @Bean(name = "entityManagerSecond")
     public EntityManager entityManager(EntityManagerFactoryBuilder builder) {
         return entityManagerFactorySecond(builder).getObject().createEntityManager();
     }
 
     @Bean(name = "entityManagerFactorySecond")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactorySecond (EntityManagerFactoryBuilder builder) {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactorySecond(EntityManagerFactoryBuilder builder) {
         final HashMap<String, String> properties = new HashMap<>();
         properties.put("hibernate.hbm2ddl.auto", ddlAuto);
         properties.put("hibernate.dialect", pgDialect);
         properties.put("hibernate.show_sql", showSql);
         return builder.dataSource(secondDataSource)
-                .properties(getHibernateProperties())
                 .packages("com.lwh.pojo.entity.second")
                 .properties(properties)
                 .persistenceUnit("secondaryPersistenceUnit")
@@ -72,9 +60,5 @@ public class SecondConfig {
     @Bean(name = "transactionManagerSecond")
     public PlatformTransactionManager transactionManager(EntityManagerFactoryBuilder builder) {
         return new JpaTransactionManager(entityManagerFactorySecond(builder).getObject());
-    }
-
-    private Map<String, Object> getHibernateProperties() {
-        return hibernateProperties.determineHibernateProperties(jpaProperties.getProperties(), new HibernateSettings());
     }
 }
